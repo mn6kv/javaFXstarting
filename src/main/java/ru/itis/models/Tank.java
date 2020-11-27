@@ -11,7 +11,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import ru.itis.enums.Direction;
 
 @AllArgsConstructor
@@ -69,11 +68,34 @@ public class Tank {
     }
 
     public void shoot() {
+
         Circle bullet = new Circle(recTrunk.getLayoutX(), recTrunk.getLayoutY(), 5, Color.CHOCOLATE);
         pane.getChildren().add(bullet);
 
+        if (towerDirection == Direction.RIGHT) {
+            bullet.setLayoutX(bullet.getLayoutX() + 13);
+            bullet.setLayoutY(bullet.getLayoutY() + 3);
+        }
+        if (towerDirection == Direction.LEFT) {
+            bullet.setLayoutY(bullet.getLayoutY() + 3);
+        }
+        if (towerDirection == Direction.UP) {
+            bullet.setLayoutX(bullet.getLayoutX() + 6);
+        }
+        if (towerDirection == Direction.DOWN) {
+            bullet.setLayoutX(bullet.getLayoutX() + 6);
+            bullet.setLayoutY(bullet.getLayoutY() + 13);
+        }
+
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.005), animation -> {
-            bullet.setLayoutX(bullet.getLayoutX() + 2);
+            if (towerDirection == Direction.RIGHT)
+                bullet.setLayoutX(bullet.getLayoutX() + 2);
+            if (towerDirection == Direction.LEFT)
+                bullet.setLayoutX(bullet.getLayoutX() - 2);
+            if (towerDirection == Direction.UP)
+                bullet.setLayoutY(bullet.getLayoutY() - 2);
+            if (towerDirection == Direction.DOWN)
+                bullet.setLayoutY(bullet.getLayoutY() + 2);
         }));
 
         timeline.setCycleCount(500);
