@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.itis.controllers.MainController">
+   <children>
+      <Button fx:id="btnStart" layoutX="204.0" layoutY="14.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="192.0" text="Start">
+         <font>
+            <Font name="Calibri Bold" size="12.0" />
+         </font>
+      </Button>
+      <Label fx:id="tvName" layoutX="48.0" layoutY="17.0" text="Tanks" />
+      <Rectangle fx:id="recTank1" arcHeight="5.0" arcWidth="5.0" fill="#32791a" height="33.0" layoutX="275.0" layoutY="184.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
+   </children>
+</AnchorPane>
