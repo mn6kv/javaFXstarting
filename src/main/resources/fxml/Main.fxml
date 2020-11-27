@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Ellipse?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
@@ -15,5 +16,7 @@
       </Button>
       <Label fx:id="tvName" layoutX="48.0" layoutY="17.0" text="Tanks" />
       <Rectangle fx:id="recTank1" arcHeight="5.0" arcWidth="5.0" fill="#32791a" height="33.0" layoutX="275.0" layoutY="184.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
+      <Ellipse fx:id="elTower" fill="#4fb129a8" layoutX="294.0" layoutY="201.0" radiusX="12.0" radiusY="9.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle fx:id="recTrunk" arcHeight="5.0" arcWidth="5.0" fill="#4fb129" height="6.0" layoutX="306.0" layoutY="198.0" stroke="BLACK" strokeType="INSIDE" width="14.0" />
    </children>
 </AnchorPane>

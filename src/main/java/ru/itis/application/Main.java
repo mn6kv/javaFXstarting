@@ -21,7 +21,7 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
         stage.setScene(new Scene(root));
         stage.setTitle("Tanks");
-        stage.setResizable(false);
+        stage.setResizable(true);
 
         Scene scene = stage.getScene();
         MainController mainController = fxmlLoader.getController();

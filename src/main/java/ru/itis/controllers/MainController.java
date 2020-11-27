@@ -12,8 +12,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import ru.itis.enums.Direction;
+import ru.itis.models.Tank;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,39 +29,56 @@ public class MainController implements Initializable {
     private Button btnStart;
     @FXML
     private Label tvName;
+
     @FXML
     private Rectangle recTank1;
-    private Boolean isPosHorisontal1 = true;
+    @FXML
+    private Ellipse elTower;
+    @FXML
+    private Rectangle recTrunk;
+
+    private Tank player;
+    private Direction bodyDirection = Direction.RIGHT;
+    private Direction towerDirection = Direction.RIGHT;
 
     public EventHandler<KeyEvent> keyEventEventHandler = keyEvent -> {
+
+         player = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection, towerDirection);
+
         if (keyEvent.getCode() == KeyCode.A) {
-            recTank1.setLayoutX(recTank1.getLayoutX() - 15);
-            isPosHorisontal1 = true;
+            player.moveLeft();
+            bodyDirection = Direction.LEFT;
         } else if (keyEvent.getCode() == KeyCode.D) {
-            recTank1.setLayoutX(recTank1.getLayoutX() + 15);
-            isPosHorisontal1 = true;
+            player.moveRight();
+            bodyDirection = Direction.RIGHT;
         } else if (keyEvent.getCode() == KeyCode.W) {
-            recTank1.setLayoutY(recTank1.getLayoutY() - 15);
-            isPosHorisontal1 = false;
+            player.moveUp();
+            bodyDirection = Direction.UP;
         } else if (keyEvent.getCode() == KeyCode.S) {
-            recTank1.setLayoutY(recTank1.getLayoutY() + 15);
-            isPosHorisontal1 = false;
-        } else if (keyEvent.getCode() == KeyCode.CONTROL) {
+            player.moveDown();
+            bodyDirection = Direction.DOWN;
 
-            Circle bullet = new Circle(recTank1.getLayoutX(), recTank1.getLayoutY(), 5, Color.CHOCOLATE);
-            pane.getChildren().add(bullet);
+        } else if (keyEvent.getCode() == KeyCode.I) {
+            player.rotateTower(Direction.UP);
+            towerDirection = Direction.UP;
+        } else if (keyEvent.getCode() == KeyCode.K) {
+            player.rotateTower(Direction.DOWN);
+            towerDirection = Direction.DOWN;
+        } else if (keyEvent.getCode() == KeyCode.J) {
+            player.rotateTower(Direction.LEFT);
+            towerDirection = Direction.LEFT;
+        } else if (keyEvent.getCode() == KeyCode.L) {
+          player.rotateTower(Direction.RIGHT);
+            towerDirection = Direction.RIGHT;
 
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.005), animation -> {
-                bullet.setLayoutX(bullet.getLayoutX() + 2);
-            }));
-
-            timeline.setCycleCount(500);
-            timeline.play();
+        } else if (keyEvent.getCode() == KeyCode.SPACE) {
+            player.shoot();
         }
     };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        btnStart.setFocusTraversable(false);
         btnStart.setOnAction(actionEvent -> {
             tvName.setText("Fight!");
         });
