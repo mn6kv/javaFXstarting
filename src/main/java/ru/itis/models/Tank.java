@@ -5,13 +5,17 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import lombok.AllArgsConstructor;
+import ru.itis.controllers.MainController;
 import ru.itis.enums.Direction;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @AllArgsConstructor
 public class Tank {
@@ -28,6 +32,9 @@ public class Tank {
     private Direction mainDirection;
     private Direction towerDirection;
 
+    private String name;
+    private byte hp;
+
 //    public Tank(Pane pane, Rectangle recTank1, Ellipse elTower, Rectangle recTrunk) {
 //        this.pane = pane;
 //        this.recTank1 = recTank1;
@@ -36,35 +43,43 @@ public class Tank {
 //    }
 
     public void moveLeft() {
-        recTank1.setLayoutX(recTank1.getLayoutX() - 15);
-        elTower.setLayoutX(elTower.getLayoutX() - 15);
-        recTrunk.setLayoutX(recTrunk.getLayoutX() - 15);
-        mainDirection = Direction.LEFT;
-        this.horizontalyze(recTank1);
+        if (this.hp > 0) {
+            recTank1.setLayoutX(recTank1.getLayoutX() - 15);
+            elTower.setLayoutX(elTower.getLayoutX() - 15);
+            recTrunk.setLayoutX(recTrunk.getLayoutX() - 15);
+            mainDirection = Direction.LEFT;
+            this.horizontalyze(recTank1);
+        }
     }
 
     public void moveRight() {
-        recTank1.setLayoutX(recTank1.getLayoutX() + 15);
-        elTower.setLayoutX(elTower.getLayoutX() + 15);
-        recTrunk.setLayoutX(recTrunk.getLayoutX() + 15);
-        mainDirection = Direction.RIGHT;
-        this.horizontalyze(recTank1);
+        if (this.hp > 0) {
+            recTank1.setLayoutX(recTank1.getLayoutX() + 15);
+            elTower.setLayoutX(elTower.getLayoutX() + 15);
+            recTrunk.setLayoutX(recTrunk.getLayoutX() + 15);
+            mainDirection = Direction.RIGHT;
+            this.horizontalyze(recTank1);
+        }
     }
 
     public void moveUp() {
-        recTank1.setLayoutY(recTank1.getLayoutY() - 15);
-        elTower.setLayoutY(elTower.getLayoutY() - 15);
-        recTrunk.setLayoutY(recTrunk.getLayoutY() - 15);
-        mainDirection = Direction.UP;
-        this.verticalize(recTank1);
+        if (this.hp > 0) {
+            recTank1.setLayoutY(recTank1.getLayoutY() - 15);
+            elTower.setLayoutY(elTower.getLayoutY() - 15);
+            recTrunk.setLayoutY(recTrunk.getLayoutY() - 15);
+            mainDirection = Direction.UP;
+            this.verticalize(recTank1);
+        }
     }
 
     public void moveDown() {
-        recTank1.setLayoutY(recTank1.getLayoutY() + 15);
-        elTower.setLayoutY(elTower.getLayoutY() + 15);
-        recTrunk.setLayoutY(recTrunk.getLayoutY() + 15);
-        this.verticalize(recTank1);
-        towerDirection = Direction.DOWN;
+        if (this.hp > 0) {
+            recTank1.setLayoutY(recTank1.getLayoutY() + 15);
+            elTower.setLayoutY(elTower.getLayoutY() + 15);
+            recTrunk.setLayoutY(recTrunk.getLayoutY() + 15);
+            this.verticalize(recTank1);
+            towerDirection = Direction.DOWN;
+        }
     }
 
     public void shoot() {
@@ -96,10 +111,62 @@ public class Tank {
                 bullet.setLayoutY(bullet.getLayoutY() - 2);
             if (towerDirection == Direction.DOWN)
                 bullet.setLayoutY(bullet.getLayoutY() + 2);
+//        /*НЕ ЗАБЫТЬ ПОМЕНЯТЬ this НА enemy*/ if (this.isInjured(bullet)) { pane.getChildren().remove(bullet);}
         }));
 
         timeline.setCycleCount(500);
         timeline.play();
+
+    }
+
+    public AtomicBoolean suicide() {
+        Circle bullet = new Circle(recTank1.getLayoutX(), recTank1.getLayoutY(), 5, Color.CHOCOLATE);
+        pane.getChildren().add(bullet);
+
+        bullet.setLayoutX(bullet.getLayoutX() - 100);
+        bullet.setLayoutY(bullet.getLayoutY() + 10);
+        AtomicBoolean injured = new AtomicBoolean(false);
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.005), animation -> {
+                bullet.setLayoutX(bullet.getLayoutX() + 2);
+                if (this.isInjured(bullet)) {
+                    pane.getChildren().remove(bullet);
+                    injured.set(true);
+                    MainController.hp -= 10; //мини-костыль
+                }
+        }));
+
+        timeline.setCycleCount(500);
+        timeline.play();
+        return injured;
+    }
+
+    public boolean isInjured(Circle enemyBullet) {
+//        if ((enemyBullet.getCenterX() >= (this.recTank1.getX() - 1.7)) &&
+//                (enemyBullet.getCenterY() >= (this.recTank1.getY() - 1.7)) &&
+//                (enemyBullet.getCenterX() <= (this.recTank1.getX() +  + 50.7 + 1.7)) &&
+//                (enemyBullet.getCenterY() <= (this.recTank1.getY() + 33 + 1.7)) &&
+//                (enemyBullet.isVisible())) {
+        if (enemyBullet.getBoundsInParent().intersects(recTank1.getBoundsInParent()) &&
+                (enemyBullet.isVisible())) {
+            this.hp -= 10;
+            System.out.println(hp);
+            Paint color = recTank1.getFill();
+            enemyBullet.setVisible(false);
+            this.recTank1.setFill(Color.RED);
+            this.recTank1.setFill(color);
+//            this.recTank1.setFill(color);
+//            if (this.hp <= 0)
+//                gameOver(this);
+            return true;
+        }
+        else return false;
+    }
+
+    public void teleportToRight () {
+        this.recTank1.setLayoutX(recTank1.getLayoutX() + 200);
+        this.elTower.setLayoutX(elTower.getLayoutX() + 200);
+        this.recTrunk.setLayoutX(recTrunk.getLayoutX() + 200);
     }
 
     public void verticalize(Shape item) {
@@ -197,10 +264,20 @@ public class Tank {
     }
 
     public void rotateTower(Direction direction) {
-        if (direction == Direction.LEFT || direction == Direction.RIGHT)
-            horizontalyzeTower(direction);
-        if (direction == Direction.UP || direction == Direction.DOWN)
-            verticalizeTower(direction);
+        if (this.hp > 0) {
+            if (direction == Direction.LEFT || direction == Direction.RIGHT)
+                horizontalyzeTower(direction);
+            if (direction == Direction.UP || direction == Direction.DOWN)
+                verticalizeTower(direction);
+        }
         towerDirection = direction;
+    }
+
+    public byte getHp() {
+        return hp;
+    }
+
+    public String getName() {
+        return name;
     }
 }

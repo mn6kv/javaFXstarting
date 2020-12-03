@@ -8,13 +8,19 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import ru.itis.enums.Direction;
 import ru.itis.models.Tank;
+import ru.itis.sockets.ReceiveMessageTask;
+import ru.itis.sockets.SocketClient;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainController implements Initializable {
 
@@ -33,12 +39,17 @@ public class MainController implements Initializable {
     private Rectangle recTrunk;
 
     private Tank player;
+    public static byte hp = 100;
+    public String name = "player1";
     private Direction bodyDirection = Direction.RIGHT;
     private Direction towerDirection = Direction.RIGHT;
 
     public EventHandler<KeyEvent> keyEventEventHandler = keyEvent -> {
 
-         player = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection, towerDirection);
+         player = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection, towerDirection, name, hp);
+         tvName.setText(String.valueOf(player.getHp()));
+         if (player.getHp() == 0)
+             gameOver(player);
 
         if (keyEvent.getCode() == KeyCode.A) {
             player.moveLeft();
@@ -69,13 +80,30 @@ public class MainController implements Initializable {
         } else if (keyEvent.getCode() == KeyCode.SPACE) {
             player.shoot();
         }
+
+        else if (keyEvent.getCode() == KeyCode.T) {
+            player.teleportToRight();
+        } else if (keyEvent.getCode() == KeyCode.DELETE) {
+            if (player.suicide().get())
+                hp = player.getHp();
+        }
     };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        SocketClient client = new SocketClient("localhost", 1337);
+        ReceiveMessageTask receiveMessageTask = new ReceiveMessageTask(client.getFromServer(), this);
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        service.execute(receiveMessageTask);
+
         btnStart.setFocusTraversable(false);
         btnStart.setOnAction(actionEvent -> {
             tvName.setText("Fight!");
+            client.sendMessage("Client sent message");
         });
+    }
+
+    public void gameOver(Tank wasted) {
+        tvName.setText("GAME OVER:\n" + wasted.getName() + "was killed");
     }
 }
