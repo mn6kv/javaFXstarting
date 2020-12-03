@@ -8,8 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import ru.itis.enums.Direction;
@@ -26,66 +24,68 @@ public class MainController implements Initializable {
 
     @FXML
     private AnchorPane pane;
-    @FXML
-    private Button btnStart;
-    @FXML
-    private Label tvName;
+//    @FXML
+//    private Button btnStart;
 
+    @FXML
+    private Label tvName1;
     @FXML
     private Rectangle recTank1;
     @FXML
     private Ellipse elTower;
     @FXML
     private Rectangle recTrunk;
+    private Tank player1;
+    public static byte hp1 = 100;
+    public String name1 = "player1";
+    private Direction bodyDirection1 = Direction.RIGHT;
+    private Direction towerDirection1 = Direction.RIGHT;
 
-    private Tank player;
-    public static byte hp = 100;
-    public String name = "player1";
-    private Direction bodyDirection = Direction.RIGHT;
-    private Direction towerDirection = Direction.RIGHT;
+    @FXML
+    private Label tvName2;
 
     public EventHandler<KeyEvent> keyEventEventHandler = keyEvent -> {
 
-         player = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection, towerDirection, name, hp);
-         tvName.setText(String.valueOf(player.getHp()));
-         if (player.getHp() == 0)
-             gameOver(player);
+         player1 = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection1, towerDirection1, name1, hp1);
+         tvName1.setText(String.valueOf(player1.getHp()));
+         if (player1.getHp() == 0)
+             gameOver(player1);
 
         if (keyEvent.getCode() == KeyCode.A) {
-            player.moveLeft();
-            bodyDirection = Direction.LEFT;
+            player1.moveLeft();
+            bodyDirection1 = Direction.LEFT;
         } else if (keyEvent.getCode() == KeyCode.D) {
-            player.moveRight();
-            bodyDirection = Direction.RIGHT;
+            player1.moveRight();
+            bodyDirection1 = Direction.RIGHT;
         } else if (keyEvent.getCode() == KeyCode.W) {
-            player.moveUp();
-            bodyDirection = Direction.UP;
+            player1.moveUp();
+            bodyDirection1 = Direction.UP;
         } else if (keyEvent.getCode() == KeyCode.S) {
-            player.moveDown();
-            bodyDirection = Direction.DOWN;
+            player1.moveDown();
+            bodyDirection1 = Direction.DOWN;
 
         } else if (keyEvent.getCode() == KeyCode.I) {
-            player.rotateTower(Direction.UP);
-            towerDirection = Direction.UP;
+            player1.rotateTower(Direction.UP);
+            towerDirection1 = Direction.UP;
         } else if (keyEvent.getCode() == KeyCode.K) {
-            player.rotateTower(Direction.DOWN);
-            towerDirection = Direction.DOWN;
+            player1.rotateTower(Direction.DOWN);
+            towerDirection1 = Direction.DOWN;
         } else if (keyEvent.getCode() == KeyCode.J) {
-            player.rotateTower(Direction.LEFT);
-            towerDirection = Direction.LEFT;
+            player1.rotateTower(Direction.LEFT);
+            towerDirection1 = Direction.LEFT;
         } else if (keyEvent.getCode() == KeyCode.L) {
-          player.rotateTower(Direction.RIGHT);
-            towerDirection = Direction.RIGHT;
+          player1.rotateTower(Direction.RIGHT);
+            towerDirection1 = Direction.RIGHT;
 
         } else if (keyEvent.getCode() == KeyCode.SPACE) {
-            player.shoot();
+            player1.shoot();
         }
 
         else if (keyEvent.getCode() == KeyCode.T) {
-            player.teleportToRight();
+            player1.teleportToRight();
         } else if (keyEvent.getCode() == KeyCode.DELETE) {
-            if (player.suicide().get())
-                hp = player.getHp();
+            if (player1.suicide().get())
+                hp1 = player1.getHp();
         }
     };
 
@@ -96,14 +96,13 @@ public class MainController implements Initializable {
         ExecutorService service = Executors.newFixedThreadPool(1);
         service.execute(receiveMessageTask);
 
-        btnStart.setFocusTraversable(false);
-        btnStart.setOnAction(actionEvent -> {
-            tvName.setText("Fight!");
-            client.sendMessage("Client sent message");
-        });
+//        btnStart.setFocusTraversable(false);
+//        btnStart.setOnAction(actionEvent -> {
+//            client.sendMessage("Client sent message");
+//        });
     }
 
     public void gameOver(Tank wasted) {
-        tvName.setText("GAME OVER:\n" + wasted.getName() + "was killed");
+        tvName1.setText("GAME OVER:\n" + wasted.getName() + "was killed");
     }
 }

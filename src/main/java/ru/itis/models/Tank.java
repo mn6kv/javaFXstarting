@@ -128,12 +128,12 @@ public class Tank {
         AtomicBoolean injured = new AtomicBoolean(false);
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.005), animation -> {
-                bullet.setLayoutX(bullet.getLayoutX() + 2);
-                if (this.isInjured(bullet)) {
-                    pane.getChildren().remove(bullet);
-                    injured.set(true);
-                    MainController.hp -= 10; //мини-костыль
-                }
+            bullet.setLayoutX(bullet.getLayoutX() + 2);
+            if (this.isInjured(bullet)) {
+                pane.getChildren().remove(bullet);
+                injured.set(true);
+                MainController.hp1 -= 10; //мини-костыль
+            }
         }));
 
         timeline.setCycleCount(500);
@@ -151,19 +151,17 @@ public class Tank {
                 (enemyBullet.isVisible())) {
             this.hp -= 10;
             System.out.println(hp);
-            Paint color = recTank1.getFill();
             enemyBullet.setVisible(false);
-            this.recTank1.setFill(Color.RED);
-            this.recTank1.setFill(color);
-//            this.recTank1.setFill(color);
-//            if (this.hp <= 0)
-//                gameOver(this);
+            if (this.hp <= 0) {
+                this.recTank1.setFill(Color.RED);
+                this.elTower.setFill(Color.BLACK);
+                this.recTrunk.setFill(Color.BLACK);
+            }
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
-    public void teleportToRight () {
+    public void teleportToRight() {
         this.recTank1.setLayoutX(recTank1.getLayoutX() + 200);
         this.elTower.setLayoutX(elTower.getLayoutX() + 200);
         this.recTrunk.setLayoutX(recTrunk.getLayoutX() + 200);
