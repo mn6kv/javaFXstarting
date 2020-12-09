@@ -8,9 +8,12 @@
 <AnchorPane fx:id="pane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.itis.controllers.MainController">
    <children>
       <Label fx:id="tvName1" layoutX="87.0" layoutY="26.0" text="Player 1" />
-      <Rectangle fx:id="recTank1" arcHeight="5.0" arcWidth="5.0" fill="#32791a" height="33.0" layoutX="275.0" layoutY="184.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
-      <Ellipse fx:id="elTower" fill="#4fb129a8" layoutX="294.0" layoutY="201.0" radiusX="12.0" radiusY="9.0" stroke="BLACK" strokeType="INSIDE" />
-      <Rectangle fx:id="recTrunk" arcHeight="5.0" arcWidth="5.0" fill="#4fb129" height="6.0" layoutX="306.0" layoutY="198.0" stroke="BLACK" strokeType="INSIDE" width="14.0" />
+      <Rectangle fx:id="recTank1" arcHeight="5.0" arcWidth="5.0" fill="#32791a" height="33.0" layoutX="83.0" layoutY="184.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
+      <Ellipse fx:id="elTower" fill="#4fb129a8" layoutX="102.0" layoutY="201.0" radiusX="12.0" radiusY="9.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle fx:id="recTrunk" arcHeight="5.0" arcWidth="5.0" fill="#4fb129" height="6.0" layoutX="114.0" layoutY="198.0" stroke="BLACK" strokeType="INSIDE" width="14.0" />
       <Label fx:id="tvName2" layoutX="461.0" layoutY="26.0" text="Player2" />
+      <Rectangle fx:id="recTank2" arcHeight="5.0" arcWidth="5.0" fill="#32791a" height="33.0" layoutX="456.0" layoutY="182.0" stroke="BLACK" strokeType="INSIDE" width="50.0" />
+      <Ellipse fx:id="elTower2" fill="#4fb129a8" layoutX="475.0" layoutY="199.0" radiusX="12.0" radiusY="9.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle fx:id="recTrunk2" arcHeight="5.0" arcWidth="5.0" fill="#4fb129" height="6.0" layoutX="487.0" layoutY="196.0" stroke="BLACK" strokeType="INSIDE" width="14.0" />
    </children>
 </AnchorPane>

@@ -5,9 +5,6 @@ import ru.itis.controllers.MainController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 public class ReceiveMessageTask extends Task<Void> {
 
@@ -21,15 +18,18 @@ public class ReceiveMessageTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
+        String msgFromServer = null;
         while (true) {
-            String msgFromServer = null;
             try {
                 msgFromServer = fromServer.readLine();
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
-            if (msgFromServer != null) {
+            if (msgFromServer.equals("1") || msgFromServer.equals("2")) {
+                mainController.setNumOfCurrentPlayer(Byte.valueOf(msgFromServer));
+            } else if (msgFromServer != null) {
                 System.out.println(msgFromServer);
+                mainController.opponentClick(msgFromServer);
             }
         }
     }

@@ -82,6 +82,7 @@ public class Tank {
         }
     }
 
+    //проверить на работе с противником
     public void shoot() {
 
         Circle bullet = new Circle(recTrunk.getLayoutX(), recTrunk.getLayoutY(), 5, Color.CHOCOLATE);
@@ -267,8 +268,8 @@ public class Tank {
                 horizontalyzeTower(direction);
             if (direction == Direction.UP || direction == Direction.DOWN)
                 verticalizeTower(direction);
+            towerDirection = direction;
         }
-        towerDirection = direction;
     }
 
     public byte getHp() {
