@@ -20,13 +20,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AllArgsConstructor
 public class Tank {
 
-    @FXML
+//    @FXML
     private Pane pane;
-    @FXML
+//    @FXML
     private Rectangle recTank1;
-    @FXML
+//    @FXML
     private Ellipse elTower;
-    @FXML
+//    @FXML
     private Rectangle recTrunk;
 
     private Direction mainDirection;

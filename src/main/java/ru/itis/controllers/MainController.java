@@ -3,7 +3,6 @@ package ru.itis.controllers;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,8 +14,6 @@ import ru.itis.models.Tank;
 import ru.itis.sockets.ReceiveMessageTask;
 import ru.itis.sockets.SocketClient;
 
-import java.io.BufferedReader;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -28,8 +25,6 @@ public class MainController implements Initializable {
 
     @FXML
     private AnchorPane pane;
-//    @FXML
-//    private Button btnStart;
 
     @FXML
     private Label tvName1;
@@ -40,7 +35,7 @@ public class MainController implements Initializable {
     @FXML
     private Rectangle recTrunk;
 
-    private Tank player1;
+    private Tank currentPlayer;
     public static byte hp1 = 100;
     public String name1 = "player1";
     private Direction bodyDirection1 = Direction.RIGHT;
@@ -67,64 +62,65 @@ public class MainController implements Initializable {
 
         renderTank();
 
-        tvName1.setText(String.valueOf(player1.getHp()));
-        if (player1.getHp() == 0)
-            gameOver(player1);
+        tvName1.setText(String.valueOf(currentPlayer.getHp()));
+        if (currentPlayer.getHp() == 0)
+            gameOver(currentPlayer);
         tvName2.setText(String.valueOf(opponent.getHp()));
         if (opponent.getHp() == 0)
             gameOver(opponent);
 
         if (keyEvent.getCode() == KeyCode.A) {
-            player1.moveLeft();
+            currentPlayer.moveLeft();
             bodyDirection1 = Direction.LEFT;
             client.setUserKey(KeyCode.A);
         } else if (keyEvent.getCode() == KeyCode.D) {
-            player1.moveRight();
+            currentPlayer.moveRight();
             bodyDirection1 = Direction.RIGHT;
             client.setUserKey(KeyCode.D);
         } else if (keyEvent.getCode() == KeyCode.W) {
-            player1.moveUp();
+            currentPlayer.moveUp();
             bodyDirection1 = Direction.UP;
             client.setUserKey(KeyCode.W);
         } else if (keyEvent.getCode() == KeyCode.S) {
-            player1.moveDown();
+            currentPlayer.moveDown();
             bodyDirection1 = Direction.DOWN;
             client.setUserKey(KeyCode.S);
 
         } else if (keyEvent.getCode() == KeyCode.I) {
-            player1.rotateTower(Direction.UP);
+            currentPlayer.rotateTower(Direction.UP);
             towerDirection1 = Direction.UP;
             client.setUserKey(KeyCode.I);
         } else if (keyEvent.getCode() == KeyCode.K) {
-            player1.rotateTower(Direction.DOWN);
+            currentPlayer.rotateTower(Direction.DOWN);
             towerDirection1 = Direction.DOWN;
             client.setUserKey(KeyCode.K);
         } else if (keyEvent.getCode() == KeyCode.J) {
-            player1.rotateTower(Direction.LEFT);
+            currentPlayer.rotateTower(Direction.LEFT);
             towerDirection1 = Direction.LEFT;
             client.setUserKey(KeyCode.J);
         } else if (keyEvent.getCode() == KeyCode.L) {
-          player1.rotateTower(Direction.RIGHT);
+          currentPlayer.rotateTower(Direction.RIGHT);
             towerDirection1 = Direction.RIGHT;
             client.setUserKey(KeyCode.L);
 
         } else if (keyEvent.getCode() == KeyCode.SPACE) {
-            player1.shoot();
+            currentPlayer.shoot();
             hp2 -= 10;
             client.setUserKey(KeyCode.SPACE);
         }
 
         else if (keyEvent.getCode() == KeyCode.T) {
-            player1.teleportToRight();
+            currentPlayer.teleportToRight();
         } else if (keyEvent.getCode() == KeyCode.DELETE) {
-            if (player1.suicide().get())
-                hp1 = player1.getHp();
+            if (currentPlayer.suicide().get())
+                hp1 = currentPlayer.getHp();
         }
     };
 
     public void opponentClick(String key) {
 
         KeyCode code = KeyCode.getKeyCode(key);
+        renderTank();
 
         if (code == KeyCode.A) {
             opponent.moveLeft();
@@ -162,10 +158,10 @@ public class MainController implements Initializable {
 
     private void renderTank() {
         if (numOfCurrentPlayer == 1) {
-            player1 = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection1, towerDirection1, name1, hp1);
+            currentPlayer = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection1, towerDirection1, name1, hp1);
             opponent = new Tank(pane, recTank2, elTower2, recTrunk2, bodyDirection2, towerDirection2, name2, hp2);
         } else if (numOfCurrentPlayer == 2) {
-            player1 = new Tank(pane, recTank2, elTower2, recTrunk2, bodyDirection2, towerDirection2, name2, hp2);
+            currentPlayer = new Tank(pane, recTank2, elTower2, recTrunk2, bodyDirection2, towerDirection2, name2, hp2);
             opponent = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection1, towerDirection1, name1, hp1);
         }
     }
@@ -176,8 +172,6 @@ public class MainController implements Initializable {
         ReceiveMessageTask receiveMessageTask = new ReceiveMessageTask(client.getFromServer(), this);
         ExecutorService service = Executors.newFixedThreadPool(1);
         service.execute(receiveMessageTask);
-
-
 
 
 //        btnStart.setFocusTraversable(false);

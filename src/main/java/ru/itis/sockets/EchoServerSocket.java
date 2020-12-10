@@ -60,6 +60,7 @@ public class EchoServerSocket extends Task<Void> {
                     while (messageFromClient != null) {
                         toClient2.println(messageFromClient);
                         toClient2.flush();
+                        messageFromClient = fromClient.readLine();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -77,6 +78,7 @@ public class EchoServerSocket extends Task<Void> {
                     while (messageFromClient != null) {
                         toClient.println(messageFromClient);
                         toClient.flush();
+                        messageFromClient = fromClient2.readLine();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
