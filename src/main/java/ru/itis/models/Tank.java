@@ -2,10 +2,8 @@ package ru.itis.models;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
@@ -20,13 +18,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AllArgsConstructor
 public class Tank {
 
-//    @FXML
+    //    @FXML
     private Pane pane;
-//    @FXML
-    private Rectangle recTank1;
-//    @FXML
+    //    @FXML
+    private Rectangle recTank;
+    //    @FXML
     private Ellipse elTower;
-//    @FXML
+    //    @FXML
     private Rectangle recTrunk;
 
     private Direction mainDirection;
@@ -44,46 +42,46 @@ public class Tank {
 
     public void moveLeft() {
         if (this.hp > 0) {
-            recTank1.setLayoutX(recTank1.getLayoutX() - 15);
+            recTank.setLayoutX(recTank.getLayoutX() - 15);
             elTower.setLayoutX(elTower.getLayoutX() - 15);
             recTrunk.setLayoutX(recTrunk.getLayoutX() - 15);
             mainDirection = Direction.LEFT;
-            this.horizontalyze(recTank1);
+            this.horizontalyze(recTank);
         }
     }
 
     public void moveRight() {
         if (this.hp > 0) {
-            recTank1.setLayoutX(recTank1.getLayoutX() + 15);
+            recTank.setLayoutX(recTank.getLayoutX() + 15);
             elTower.setLayoutX(elTower.getLayoutX() + 15);
             recTrunk.setLayoutX(recTrunk.getLayoutX() + 15);
             mainDirection = Direction.RIGHT;
-            this.horizontalyze(recTank1);
+            this.horizontalyze(recTank);
         }
     }
 
     public void moveUp() {
         if (this.hp > 0) {
-            recTank1.setLayoutY(recTank1.getLayoutY() - 15);
+            recTank.setLayoutY(recTank.getLayoutY() - 15);
             elTower.setLayoutY(elTower.getLayoutY() - 15);
             recTrunk.setLayoutY(recTrunk.getLayoutY() - 15);
             mainDirection = Direction.UP;
-            this.verticalize(recTank1);
+            this.verticalize(recTank);
         }
     }
 
     public void moveDown() {
         if (this.hp > 0) {
-            recTank1.setLayoutY(recTank1.getLayoutY() + 15);
+            recTank.setLayoutY(recTank.getLayoutY() + 15);
             elTower.setLayoutY(elTower.getLayoutY() + 15);
             recTrunk.setLayoutY(recTrunk.getLayoutY() + 15);
-            this.verticalize(recTank1);
+            this.verticalize(recTank);
             towerDirection = Direction.DOWN;
         }
     }
 
     //проверить на работе с противником
-    public void shoot() {
+    public void shoot(Tank opponent, Byte numOfCurrentPlayer) {
 
         Circle bullet = new Circle(recTrunk.getLayoutX(), recTrunk.getLayoutY(), 5, Color.CHOCOLATE);
         pane.getChildren().add(bullet);
@@ -103,6 +101,8 @@ public class Tank {
             bullet.setLayoutY(bullet.getLayoutY() + 13);
         }
 
+        AtomicBoolean injured = new AtomicBoolean(false);
+
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.005), animation -> {
             if (towerDirection == Direction.RIGHT)
                 bullet.setLayoutX(bullet.getLayoutX() + 2);
@@ -112,7 +112,16 @@ public class Tank {
                 bullet.setLayoutY(bullet.getLayoutY() - 2);
             if (towerDirection == Direction.DOWN)
                 bullet.setLayoutY(bullet.getLayoutY() + 2);
-//        /*НЕ ЗАБЫТЬ ПОМЕНЯТЬ this НА enemy*/ if (this.isInjured(bullet)) { pane.getChildren().remove(bullet);}
+
+            if (opponent.isInjured(bullet)) {
+                pane.getChildren().remove(bullet);
+                injured.set(true);
+                if (numOfCurrentPlayer == 1)
+                    MainController.hp2 -= 10;
+                else if (numOfCurrentPlayer == 2)
+                    MainController.hp1 -=10;
+                opponent.hp -= 10;
+            }
         }));
 
         timeline.setCycleCount(500);
@@ -121,7 +130,7 @@ public class Tank {
     }
 
     public AtomicBoolean suicide() {
-        Circle bullet = new Circle(recTank1.getLayoutX(), recTank1.getLayoutY(), 5, Color.CHOCOLATE);
+        Circle bullet = new Circle(recTank.getLayoutX(), recTank.getLayoutY(), 5, Color.CHOCOLATE);
         pane.getChildren().add(bullet);
 
         bullet.setLayoutX(bullet.getLayoutX() - 100);
@@ -148,13 +157,13 @@ public class Tank {
 //                (enemyBullet.getCenterX() <= (this.recTank1.getX() +  + 50.7 + 1.7)) &&
 //                (enemyBullet.getCenterY() <= (this.recTank1.getY() + 33 + 1.7)) &&
 //                (enemyBullet.isVisible())) {
-        if (enemyBullet.getBoundsInParent().intersects(recTank1.getBoundsInParent()) &&
+        if (enemyBullet.getBoundsInParent().intersects(recTank.getBoundsInParent()) &&
                 (enemyBullet.isVisible())) {
             this.hp -= 10;
             System.out.println(hp);
             enemyBullet.setVisible(false);
             if (this.hp <= 0) {
-                this.recTank1.setFill(Color.RED);
+                this.recTank.setFill(Color.RED);
                 this.elTower.setFill(Color.BLACK);
                 this.recTrunk.setFill(Color.BLACK);
             }
@@ -163,7 +172,7 @@ public class Tank {
     }
 
     public void teleportToRight() {
-        this.recTank1.setLayoutX(recTank1.getLayoutX() + 200);
+        this.recTank.setLayoutX(recTank.getLayoutX() + 200);
         this.elTower.setLayoutX(elTower.getLayoutX() + 200);
         this.recTrunk.setLayoutX(recTrunk.getLayoutX() + 200);
     }

@@ -61,99 +61,149 @@ public class MainController implements Initializable {
     public EventHandler<KeyEvent> keyEventEventHandler = keyEvent -> {
 
         renderTank();
-
-        tvName1.setText(String.valueOf(currentPlayer.getHp()));
-        if (currentPlayer.getHp() == 0)
-            gameOver(currentPlayer);
-        tvName2.setText(String.valueOf(opponent.getHp()));
-        if (opponent.getHp() == 0)
-            gameOver(opponent);
+        renderHealthPoints();
 
         if (keyEvent.getCode() == KeyCode.A) {
             currentPlayer.moveLeft();
-            bodyDirection1 = Direction.LEFT;
+            if (numOfCurrentPlayer == 1)
+                bodyDirection1 = Direction.LEFT;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection2 = Direction.LEFT;
             client.setUserKey(KeyCode.A);
         } else if (keyEvent.getCode() == KeyCode.D) {
             currentPlayer.moveRight();
-            bodyDirection1 = Direction.RIGHT;
+            if (numOfCurrentPlayer == 1)
+                bodyDirection1 = Direction.RIGHT;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection2 = Direction.RIGHT;
             client.setUserKey(KeyCode.D);
         } else if (keyEvent.getCode() == KeyCode.W) {
             currentPlayer.moveUp();
-            bodyDirection1 = Direction.UP;
+            if (numOfCurrentPlayer == 1)
+                bodyDirection1 = Direction.UP;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection2 = Direction.UP;
             client.setUserKey(KeyCode.W);
         } else if (keyEvent.getCode() == KeyCode.S) {
             currentPlayer.moveDown();
-            bodyDirection1 = Direction.DOWN;
+            if (numOfCurrentPlayer == 1)
+                bodyDirection1 = Direction.DOWN;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection2 = Direction.DOWN;
             client.setUserKey(KeyCode.S);
 
         } else if (keyEvent.getCode() == KeyCode.I) {
             currentPlayer.rotateTower(Direction.UP);
-            towerDirection1 = Direction.UP;
+            if (numOfCurrentPlayer == 1)
+                towerDirection1 = Direction.UP;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection2 = Direction.UP;
             client.setUserKey(KeyCode.I);
         } else if (keyEvent.getCode() == KeyCode.K) {
             currentPlayer.rotateTower(Direction.DOWN);
-            towerDirection1 = Direction.DOWN;
+            if (numOfCurrentPlayer == 1)
+                towerDirection1 = Direction.DOWN;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection2 = Direction.DOWN;
             client.setUserKey(KeyCode.K);
         } else if (keyEvent.getCode() == KeyCode.J) {
             currentPlayer.rotateTower(Direction.LEFT);
-            towerDirection1 = Direction.LEFT;
+            if (numOfCurrentPlayer == 1)
+                towerDirection1 = Direction.LEFT;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection2 = Direction.LEFT;
             client.setUserKey(KeyCode.J);
         } else if (keyEvent.getCode() == KeyCode.L) {
-          currentPlayer.rotateTower(Direction.RIGHT);
-            towerDirection1 = Direction.RIGHT;
+            currentPlayer.rotateTower(Direction.RIGHT);
+            if (numOfCurrentPlayer == 1)
+                towerDirection1 = Direction.RIGHT;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection2 = Direction.RIGHT;
             client.setUserKey(KeyCode.L);
 
         } else if (keyEvent.getCode() == KeyCode.SPACE) {
-            currentPlayer.shoot();
-            hp2 -= 10;
+            currentPlayer.shoot(opponent, numOfCurrentPlayer);
+            if (numOfCurrentPlayer == 1)
+                hp2 = opponent.getHp();
+            if (numOfCurrentPlayer == 2)
+                hp1 = opponent.getHp();
             client.setUserKey(KeyCode.SPACE);
-        }
-
-        else if (keyEvent.getCode() == KeyCode.T) {
+        } else if (keyEvent.getCode() == KeyCode.T) {
             currentPlayer.teleportToRight();
         } else if (keyEvent.getCode() == KeyCode.DELETE) {
             if (currentPlayer.suicide().get())
                 hp1 = currentPlayer.getHp();
         }
+        renderHealthPoints();
     };
 
     public void opponentClick(String key) {
 
         KeyCode code = KeyCode.getKeyCode(key);
         renderTank();
+        renderHealthPoints();
+        System.out.println("convertion in opponentClick(): " + code);
 
         if (code == KeyCode.A) {
             opponent.moveLeft();
-            bodyDirection2 = Direction.LEFT;
+            if (numOfCurrentPlayer == 1)
+                bodyDirection2 = Direction.LEFT;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection1 = Direction.LEFT;
+
         } else if (code == KeyCode.D) {
             opponent.moveRight();
-            bodyDirection2 = Direction.RIGHT;
+            if (numOfCurrentPlayer == 1)
+                bodyDirection2 = Direction.RIGHT;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection1 = Direction.RIGHT;
         } else if (code == KeyCode.W) {
             opponent.moveUp();
-            bodyDirection2 = Direction.UP;
+            if (numOfCurrentPlayer == 1)
+                bodyDirection2 = Direction.UP;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection1 = Direction.UP;
         } else if (code == KeyCode.S) {
             opponent.moveDown();
-            bodyDirection2 = Direction.DOWN;
-        }
-
-        else if (code == KeyCode.I) {
+            if (numOfCurrentPlayer == 1)
+                bodyDirection2 = Direction.DOWN;
+            else if (numOfCurrentPlayer == 2)
+                bodyDirection1 = Direction.DOWN;
+        } else if (code == KeyCode.I) {
             opponent.rotateTower(Direction.UP);
-            towerDirection2 = Direction.UP;
+            if (numOfCurrentPlayer == 1)
+                towerDirection2 = Direction.UP;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection1 = Direction.UP;
         } else if (code == KeyCode.K) {
             opponent.rotateTower(Direction.DOWN);
-            towerDirection2 = Direction.DOWN;
+            if (numOfCurrentPlayer == 1)
+                towerDirection2 = Direction.DOWN;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection1 = Direction.DOWN;
         } else if (code == KeyCode.J) {
             opponent.rotateTower(Direction.LEFT);
-            towerDirection2 = Direction.LEFT;
+            if (numOfCurrentPlayer == 1)
+                towerDirection2 = Direction.LEFT;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection1 = Direction.LEFT;
         } else if (code == KeyCode.L) {
             opponent.rotateTower(Direction.RIGHT);
-            towerDirection2 = Direction.RIGHT;
+            if (numOfCurrentPlayer == 1)
+                towerDirection2 = Direction.RIGHT;
+            else if (numOfCurrentPlayer == 2)
+                towerDirection1 = Direction.RIGHT;
+//        } else if (code == KeyCode.SPACE) { // вот так code = null, поэтому всем похер
+        } else if (key.equals(KeyCode.SPACE.toString())) { //вот так после спейса они теряют связь (он будто выходит посреди метода shoot)
+            if (numOfCurrentPlayer == 1) {
+                opponent.shoot(currentPlayer, (byte) 2);
+                hp1 = currentPlayer.getHp();
+            } else if (numOfCurrentPlayer == 2) {
+                opponent.shoot(currentPlayer, (byte) 1);
+                hp2 = currentPlayer.getHp();
+            }
         }
-
-        else if (code == KeyCode.SPACE) {
-            opponent.shoot();
-            hp1 -= 10;
-        }
+        renderHealthPoints();
     }
 
     private void renderTank() {
@@ -164,6 +214,20 @@ public class MainController implements Initializable {
             currentPlayer = new Tank(pane, recTank2, elTower2, recTrunk2, bodyDirection2, towerDirection2, name2, hp2);
             opponent = new Tank(pane, recTank1, elTower, recTrunk, bodyDirection1, towerDirection1, name1, hp1);
         }
+    }
+
+    private void renderHealthPoints() {
+        if (numOfCurrentPlayer == 1) {
+            tvName1.setText(name1 + ": " + String.valueOf(currentPlayer.getHp()) + " hp");
+            tvName2.setText(name2 + ": " + String.valueOf(opponent.getHp()) + " hp");
+        } else if (numOfCurrentPlayer == 2) {
+            tvName1.setText(name1 + ": " + String.valueOf(opponent.getHp()) + " hp");
+            tvName2.setText(name2 + ": " + String.valueOf(currentPlayer.getHp()) + " hp");
+        }
+        if (opponent.getHp() == 0)
+            gameOver(opponent);
+        if (currentPlayer.getHp() == 0)
+            gameOver(currentPlayer);
     }
 
     @Override
@@ -182,10 +246,7 @@ public class MainController implements Initializable {
 
     public void gameOver(Tank wasted) {
         tvName1.setText("GAME OVER:\n" + wasted.getName() + "was killed");
-    }
-
-    public Byte getNumOfCurrentPlayer() {
-        return numOfCurrentPlayer;
+        tvName2.setText("GAME OVER:\n" + wasted.getName() + "was killed");
     }
 
     public void setNumOfCurrentPlayer(Byte numOfCurrentPlayer) {
