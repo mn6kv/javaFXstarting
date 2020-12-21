@@ -83,7 +83,11 @@ public class Tank {
     //проверить на работе с противником
     public void shoot(Tank opponent, Byte numOfCurrentPlayer) {
 
+        System.out.println(pane);
+        System.out.println(towerDirection);
+
         Circle bullet = new Circle(recTrunk.getLayoutX(), recTrunk.getLayoutY(), 5, Color.CHOCOLATE);
+        System.out.println("между");
         pane.getChildren().add(bullet);
 
         if (towerDirection == Direction.RIGHT) {

@@ -1,5 +1,6 @@
 package ru.itis.sockets;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import ru.itis.controllers.MainController;
 
@@ -25,11 +26,12 @@ public class ReceiveMessageTask extends Task<Void> {
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
+            final String m = msgFromServer;
             if (msgFromServer.equals("1") || msgFromServer.equals("2")) {
-                mainController.setNumOfCurrentPlayer(Byte.valueOf(msgFromServer));
+                Platform.runLater(() -> mainController.setNumOfCurrentPlayer(Byte.valueOf(m)));
             } else if (msgFromServer != null) {
                 System.out.println(msgFromServer);
-                mainController.opponentClick(msgFromServer);
+                Platform.runLater(() -> mainController.opponentClick(m));
             }
         }
     }
